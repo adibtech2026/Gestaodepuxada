@@ -1,0 +1,215 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestao de Puxada - Oficial</title>
+    <style>
+        :root { --azul: #001f3f; --azul-claro: #1a73e8; --verde: #28a745; --vermelho: #d93025; --laranja: #f2994a; --cinza: #5f6368; --fundo: #f4f7f9; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--fundo); margin: 0; padding: 15px; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .card { max-width: 420px; width: 100%; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); box-sizing: border-box; border-top: 5px solid var(--azul); }
+        .hidden { display: none !important; }
+        
+        /* CONTAINER DA LOGO */
+        .logo-container { text-align: center; margin-bottom: 20px; }
+        .logo { width: 100%; max-width: 280px; height: auto; object-fit: contain; }
+        
+        label { display: block; font-weight: bold; margin: 15px 0 5px; color: #333; font-size: 14px; }
+        select, input { width: 100%; padding: 12px; border: 1px solid #ccd1d9; border-radius: 10px; font-size: 16px; box-sizing: border-box; background: #fff; }
+        
+        button { width: 100%; padding: 16px; margin: 8px 0; border: none; border-radius: 10px; color: white; font-weight: bold; font-size: 15px; cursor: pointer; transition: 0.2s; text-transform: uppercase; }
+        button:active { transform: scale(0.97); }
+        
+        .btn-login { background: var(--azul); }
+        .btn-acao { background: var(--azul-claro); }
+        .btn-extra { background: var(--laranja); font-size: 12px; }
+        .btn-alerta { background: var(--vermelho); margin-top: 15px; }
+        .btn-finalizar { background: var(--verde); }
+        .btn-reset { background: var(--cinza); margin-top: 25px; font-size: 11px; padding: 8px; opacity: 0.7; }
+        
+        #status { text-align: center; font-weight: bold; margin: 15px 0; color: var(--azul-claro); font-size: 13px; }
+        .header-viagem { background: #f1f3f4; padding: 10px; border-radius: 8px; font-size: 12px; color: #333; margin-bottom: 20px; text-align: center; border: 1px solid #e0e0e0; }
+        
+        .group-extra { display: flex; gap: 8px; }
+        .group-extra button { flex: 1; }
+    </style>
+</head>
+<body>
+
+<div class="card" id="tela-login">
+    <div class="logo-container">
+        <img src="https://github.com/adibtech2026/Gestaodepuxada/blob/main/Logo%20Marca%20Vetorizada%20-%20Adib%20+%20AB%20in%20Bev%202025.png?raw=true" alt="Adib AB InBev" class="logo">
+    </div>
+    
+    <label>Motorista:</label>
+    <select id="motorista-select">
+        <option value="">-- Selecione seu nome --</option>
+        <option value="Sidnei Monteiro">Sidnei Monteiro</option>
+        <option value="Carlos Henrique">Carlos Henrique</option>
+        <option value="Rubens Neto">Rubens Neto</option>
+        <option value="Jose Carlos">Jose Carlos</option>
+        <option value="Marcos Rodrigo">Marcos Rodrigo</option>
+        <option value="Ramon Cristian">Ramon Cristian</option>
+    </select>
+    
+    <label>Placa:</label>
+    <select id="placa-select">
+        <option value="">-- Selecione a placa --</option>
+        <option value="PKG0266">PKG0266</option>
+        <option value="SJQ4D45">SJQ4D45</option>
+        <option value="SKJ2C51">SKJ2C51</option>
+        <option value="SKJ9C62">SKJ9C62</option>
+    </select>
+
+    <label>Senha:</label>
+    <input type="password" id="senha-input" placeholder="Digite a senha">
+    
+    <button class="btn-login" onclick="fazerLogin()">Entrar</button>
+</div>
+
+<div class="card hidden" id="tela-app">
+    <div class="logo-container" style="margin-bottom: 10px;">
+        <img src="https://github.com/adibtech2026/Gestaodepuxada/blob/main/Logo%20Marca%20Vetorizada%20-%20Adib%20+%20AB%20in%20Bev%202025.png?raw=true" alt="Logo" class="logo" style="max-width: 150px;">
+    </div>
+    
+    <div class="header-viagem" id="header-info"></div>
+    
+    <label>Pedido:</label>
+    <input type="number" id="pedido-input" placeholder="Obrigatorio p/ Saida">
+
+    <label>Local:</label>
+    <select id="local-select">
+        <option value="CDR Camacari">CDR Camacari</option>
+        <option value="Fabrica de Sergipe">Fabrica de Sergipe</option>
+        <option value="Sede">Sede</option>
+        <option value="Filial Vera Cruz">Filial Vera Cruz</option>
+    </select>
+
+    <div id="status">📍 Buscando GPS...</div>
+
+    <div id="container-botoes">
+        <button id="step1" class="btn-acao" onclick="registrar(1, '1-Saida da Revenda', true)">1. Saida da Revenda</button>
+        
+        <div class="group-extra">
+            <button class="btn-extra" onclick="registrar(0, 'EXTRA: Abastecimento', false)">⛽ Abastecimento</button>
+            <button class="btn-extra" onclick="registrar(0, 'EXTRA: Oficina', false)">🔧 Oficina</button>
+        </div>
+        
+        <button id="step4" class="btn-acao hidden" onclick="registrar(4, '4-Chegada na Unidade', true)">4. Chegada Unidade</button>
+        <button id="step5" class="btn-acao hidden" onclick="registrar(5, '5-Doc. na Fila', true)">5. Documento Fila</button>
+        <button id="step6" class="btn-acao hidden" onclick="registrar(6, '6-Inicio Carga', true)">6. Inicio Carga</button>
+        <button id="step7" class="btn-acao hidden" onclick="registrar(7, '7-Saida Carga', true)">7. Fim Carga</button>
+        <button id="step8" class="btn-acao hidden" onclick="registrar(8, '8-Aguardando NF', true)">8. Aguardando NF</button>
+        <button id="step9" class="btn-acao hidden" onclick="registrar(9, '9-Saida da Unidade', true)">9. Saida Unidade</button>
+        <button id="step10" class="btn-finalizar hidden" onclick="registrar(10, '10-Chegada na Revenda', true)">10. Chegada Revenda</button>
+        
+        <button class="btn-alerta" onclick="relatarImprevisto()">⚠️ RELATAR IMPREVISTO</button>
+        <button class="btn-reset" onclick="reiniciarCiclo()">🔄 FINALIZAR / NOVA VIAGEM</button>
+    </div>
+</div>
+
+<script>
+    // LEMBRE-SE DE COLOCAR SEU LINK DO GOOGLE ABAIXO
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwuYt7WcmL_Ed35ulFEZJsopzHfur03kKwcLDhfxzClWNx2hxgT4prczvcMrhEfCq4YxQ/exec";
+    
+    let viagem = { id: "", motorista: "", placa: "", gps: "0,0", passoAtual: 1 };
+
+    window.onload = function() {
+        const dadosSalvos = localStorage.getItem("viagem_ativa_v3");
+        if (dadosSalvos) {
+            viagem = JSON.parse(dadosSalvos);
+            abrirApp();
+            restaurarBotoes(viagem.passoAtual);
+        }
+    }
+
+    function salvarProgresso() {
+        localStorage.setItem("viagem_ativa_v3", JSON.stringify(viagem));
+    }
+
+    function fazerLogin() {
+        const mot = document.getElementById('motorista-select').value;
+        const pla = document.getElementById('placa-select').value;
+        const sen = document.getElementById('senha-input').value;
+        if(sen === "1234" && mot && pla) {
+            viagem.motorista = mot; viagem.placa = pla;
+            viagem.id = "V" + Math.floor(Date.now() / 1000);
+            viagem.passoAtual = 1;
+            salvarProgresso();
+            abrirApp();
+        } else { alert("Dados incorretos!"); }
+    }
+
+    function abrirApp() {
+        document.getElementById('tela-login').classList.add('hidden');
+        document.getElementById('tela-app').classList.remove('hidden');
+        document.getElementById('header-info').innerText = viagem.motorista + " | " + viagem.placa;
+        pegarGPS();
+    }
+
+    function restaurarBotoes(passo) {
+        document.getElementById('step1').classList.add('hidden');
+        if(passo > 1) {
+            document.getElementById('step' + passo).classList.remove('hidden');
+        } else {
+            document.getElementById('step1').classList.remove('hidden');
+        }
+    }
+
+    function pegarGPS() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(p => { 
+                viagem.gps = p.coords.latitude + "," + p.coords.longitude;
+                document.getElementById('status').innerText = "📍 Localização Ativa";
+            }, null, {enableHighAccuracy:true, timeout: 5000});
+        }
+    }
+
+    function registrar(passo, evento, ehUnico) {
+        const pedido = document.getElementById('pedido-input').value;
+        if (passo === 1 && !pedido) { alert("ERRO: Digite o Pedido!"); return; }
+        
+        document.getElementById('status').innerText = "📡 Enviando dados...";
+        
+        const dados = {
+            dataHora: new Date().toLocaleString('pt-BR'),
+            viagemID: viagem.id, motorista: viagem.motorista,
+            placa: viagem.placa, evento: evento,
+            local: document.getElementById('local-select').value,
+            pedido: pedido, gps: viagem.gps
+        };
+
+        fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(dados) });
+
+        if (ehUnico) {
+            document.getElementById('step' + passo).classList.add('hidden');
+            let proximo = (passo === 1) ? 4 : (passo < 10 ? passo + 1 : 0);
+
+            if (proximo > 0) {
+                document.getElementById('step' + proximo).classList.remove('hidden');
+                viagem.passoAtual = proximo;
+                salvarProgresso();
+            }
+
+            if(passo === 10) { 
+                alert("Viagem Finalizada!"); 
+                reiniciarCiclo(); 
+            }
+        }
+        document.getElementById('status').innerText = "✅ Salvo: " + evento;
+    }
+
+    function reiniciarCiclo() {
+        if(confirm("Deseja iniciar um novo ciclo de viagem?")) {
+            localStorage.removeItem("viagem_ativa_v3");
+            location.reload();
+        }
+    }
+
+    function relatarImprevisto() {
+        const m = prompt("Qual o imprevisto?");
+        if (m) registrar(0, "IMPREVISTO: " + m, false);
+    }
+</script>
+</body>
+</html>
