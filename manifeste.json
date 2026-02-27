@@ -1,0 +1,17 @@
+{
+  "short_ name"R: "GestãoPuxada"a. a
+  "nome"R: "Gestão de Puxada Adib"a. a
+  "ícones"[[]
+    {
+      "s-r-c"nameR: "https://github.com/adibtech2026/Gestaodepuxada/blob/main/Logo%20Marca%20Vetorizada%20-%20Adib%20+%20AB%20in%20Bev%202025.png?raw=true"a. a
+      "tamanhos"R: "512x512"a. a
+      "tipo"R: "imagem/png"a. a
+      "propósito"R: "qualquer mascaravel"
+    O}
+  ],
+  "iniciar_ url"R: "index.html"a. a
+  "fundo_cor"R: "#001f3f"a. a
+  "tema_ cor"R: "#001f3f"a. a
+  "exibição"R: "standalone" (sozinha)a. a
+  "orientação"R: "retrato"
+O}
